@@ -39,9 +39,14 @@ func main() {
 
 	// create server and allow CORS from all origins
 	r := gin.Default()
-	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"*"}
-	r.Use(cors.New(config))
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"PUT", "PATCH"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	r.POST("/login", func(c *gin.Context) {
 		// read query parameters
